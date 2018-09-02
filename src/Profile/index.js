@@ -9,12 +9,16 @@ import {
 } from '../Queries'
 
 const  Profile = () => (
-  <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
+  <Query
+    query={GET_REPOSITORIES_OF_CURRENT_USER}
+    notifyOnNetworkStatusChange={true}
+  >
     {(props) => {
-      const { data: { viewer, loading }, fetchMore } = props;
+      console.log(props)
+      const { data: { viewer }, loading, fetchMore } = props;
 
-      if(loading || !viewer) {
-        return <Loading />
+      if(loading && !viewer) {
+        return <Loading />;
       }
 
       return (
@@ -22,6 +26,7 @@ const  Profile = () => (
            {viewer.name} {viewer.login}
            <RepositoryList
              repositories={viewer.repositories}
+             loading={loading}
              fetchMore={fetchMore}
            />
           </div>
