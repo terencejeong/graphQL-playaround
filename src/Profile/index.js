@@ -1,6 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import ErrorMessage from '../Error'
 import Loading from '../Loading'
 import RepositoryList from '../Repository'
 import {
@@ -8,14 +9,17 @@ import {
   GET_REPOSITORIES_OF_CURRENT_USER,
 } from '../Queries'
 
-const  Profile = () => (
+const Profile = () => (
   <Query
     query={GET_REPOSITORIES_OF_CURRENT_USER}
     notifyOnNetworkStatusChange={true}
   >
     {(props) => {
-      console.log(props)
-      const { data: { viewer }, loading, fetchMore } = props;
+      const { data: { viewer }, loading, error, fetchMore } = props;
+
+      if (error) {
+        return <ErrorMessage error={error} />
+      }
 
       if(loading && !viewer) {
         return <Loading />;
@@ -28,6 +32,7 @@ const  Profile = () => (
              repositories={viewer.repositories}
              loading={loading}
              fetchMore={fetchMore}
+             entry={'viewer'}
            />
           </div>
       )

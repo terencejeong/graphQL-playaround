@@ -68,3 +68,41 @@ export const REMOVE_STAR = gql`
   }
 `;
 
+export const GET_REPOSITORIES_OF_ORGANIZATION =  gql`
+    query($organizationName: String!, $cursor: String) {
+        organization(login: $organizationName) {
+            repositories(first: 5, after: $cursor) {
+                edges {
+                    node {
+                        ...repository
+                    }
+                }
+                pageInfo {
+                    endCursor
+                    hasNextPage
+                }
+            }
+        }
+    }
+    ${REPOSITORY_FRAGMENT}
+`;
+
+export const GET_ISSUES_OF_REPOSITORY = gql`
+    query($repositoryOwner: String!, $repositoryName: String!) {
+        repository(name: $repositoryName, owner: $repositoryOwner) {
+            issues(first: 5) {
+                edges {
+                    node {
+                        id
+                        number
+                        state
+                        title
+                        url
+                        bodyHTML
+                    }
+                }
+            }
+        }
+    }
+`;
+
